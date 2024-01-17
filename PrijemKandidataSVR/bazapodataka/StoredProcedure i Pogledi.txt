@@ -1,0 +1,57 @@
+-- STORED PROCEDURE
+
+USE `prijem_kandidata`;
+DROP procedure IF EXISTS `DodajVojnogKandidata`;
+DELIMITER $$
+CREATE PROCEDURE DodajVojnogKandidata(
+    IN kandidat_id_param VARCHAR(10),
+    IN ime_kandidata_param VARCHAR(50),
+    IN prezime_kandidata_param VARCHAR(50),
+    IN datum_rodjenja_param DATE,
+    IN prebivaliste_param VARCHAR(50),
+    IN kontakt_telefon_param INT,
+    IN vojni_cin_oznaka_param VARCHAR(5),
+    IN napomena_param VARCHAR(1000)
+)
+BEGIN
+    INSERT INTO vojni_kandidat (
+        kandidat_id,
+        ime_kandidata,
+        prezime_kandidata,
+        datum_rodjenja,
+        prebivaliste,
+        kontakt_telefon,
+        vojni_cin_oznaka,
+        napomena
+    ) VALUES (
+        kandidat_id_param,
+        ime_kandidata_param,
+        prezime_kandidata_param,
+        datum_rodjenja_param,
+        prebivaliste_param,
+        kontakt_telefon_param,
+        vojni_cin_oznaka_param,
+        napomena_param
+    );
+END $$
+DELIMITER ;
+
+-- POGLEDI
+
+-- Kreiranje pogleda
+CREATE VIEW SviPodaciVojnihKandidata AS
+SELECT
+    vojni_kandidat.kandidat_id,
+    vojni_kandidat.ime_kandidata,
+    vojni_kandidat.prezime_kandidata,
+    vojni_kandidat.datum_rodjenja,
+    vojni_kandidat.prebivaliste,
+    vojni_kandidat.kontakt_telefon,
+    vojni_cin.naziv AS naziv_vojnog_cina,
+    vojni_kandidat.napomena
+FROM
+    vojni_kandidat
+INNER JOIN
+    vojni_cin
+ON
+    vojni_kandidat.vojni_cin_oznaka = vojni_cin.oznaka;

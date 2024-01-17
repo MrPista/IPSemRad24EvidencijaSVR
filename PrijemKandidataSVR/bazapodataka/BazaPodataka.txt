@@ -1,0 +1,56 @@
+-- Kreiranje baze podataka
+CREATE DATABASE IF NOT EXISTS prijem_kandidata CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE prijem_kandidata;
+
+-- Kreiranje tabele za korisnike
+CREATE TABLE IF NOT EXISTS `prijem_kandidata`.`korisnik` (
+    korisnik_id INT AUTO_INCREMENT PRIMARY KEY,
+    korisnicko_ime VARCHAR(30) NOT NULL,
+    lozinka VARCHAR(30) NOT NULL,
+    ime VARCHAR(50) NOT NULL,
+    prezime VARCHAR(50) NOT NULL,
+    email VARCHAR(60) NOT NULL,
+    URL_slike VARCHAR(250) NULL,
+    status_ucesca VARCHAR(30) NOT NULL
+);
+
+-- Kreiranje tabele za vojnog kandidata
+CREATE TABLE IF NOT EXISTS `prijem_kandidata`.`vojni_kandidat` (
+    kandidat_id VARCHAR(10) NOT NULL PRIMARY KEY,
+    ime_kandidata VARCHAR(50) NOT NULL,
+    prezime_kandidata VARCHAR(50) NOT NULL,
+    datum_rodjenja DATE NOT NULL,
+    prebivaliste VARCHAR(50) NOT NULL,
+    kontakt_telefon INT NOT NULL,
+    vojni_cin_oznaka VARCHAR(5) NOT NULL,	
+    napomena VARCHAR(1000) NOT NULL
+);
+
+-- Kreiranje tabele za vojni cin
+CREATE TABLE IF NOT EXISTS `prijem_kandidata`.`vojni_cin` (
+    oznaka VARCHAR(5) NOT NULL PRIMARY KEY,
+    naziv VARCHAR(25) NOT NULL,
+    obrazovanje VARCHAR(50) NOT NULL,
+    opis VARCHAR(1000)
+);
+
+alter table `prijem_kandidata`.`vojni_kandidat` add constraint FK_KONKURISE foreign key (vojni_cin_oznaka) references `prijem_kandidata`.`vojni_cin`(oznaka) on delete restrict on update cascade;
+
+
+-- Unos podataka u tabelu korisnik
+INSERT INTO korisnik (korisnicko_ime, lozinka, ime, prezime, email, URL_slike, status_ucesca) VALUES
+('Emi', 'emi123', 'Emanuel', 'Madaras Sucu','emanuelms97@gmail.com', 'slika1.jpg', 'admin'),
+('Regruter', 'reg123', 'Regruter', 'Vojnog sektora','regruter@gmail.com', 'slika2.jpg', 'regruter');
+
+-- Unos podataka u tabelu vojni_cin
+INSERT INTO vojni_cin (oznaka, naziv, obrazovanje, opis) VALUES
+('PROVOJ', 'Profesionalni vojnik', 'Osnovno obrazovanje', 'Redovni clan armije'),
+('PODOF', 'Podoficir', 'Srednje obrazovanje', 'Zvanje pripravnika nizeg staresiniskog kadra u oruzanim snagama'),
+('OF', 'Oficir', 'Visoko obrazovanje', 'Pripadnik armije, ratnog vazduhoplovstva, ratne mornarice ili druge uniformisane sluzbe koji se nalazi na odredjenog odgovornoj duznosti');
+
+
+-- Unos podataka u tabelu vojni_kandidat
+INSERT INTO vojni_kandidat (kandidat_id, ime_kandidata, prezime_kandidata, datum_rodjenja, prebivaliste, kontakt_telefon, vojni_cin_oznaka, napomena) VALUES
+('1', 'Nikola', 'Nikolic', '1997-10-15', 'Zrenjanin' , 0610000000, 'PROVOJ', 'Lekarski uredan, blag strah od visine, drzavljanstvo poseduje 10 godina' ),
+('3', 'Jovan', 'Jovanovic', '1990-05-20', 'Beograd' , 062333333, 'PODOF', 'Lekarski uredan, nije krivicno gonjen'),
+('2', 'Pera', 'Peric', '1985-01-30', 'Novi Sad' , 0635420322, 'OF', 'Lekarski uredan, nije krivicno gonjen, odlicno kognitivna moca' );
